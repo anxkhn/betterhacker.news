@@ -1,0 +1,16 @@
+[Unit]
+Description=BetterHacker Cloudflare outbound tunnel
+After=betterhacker-web.service network-online.target
+Wants=betterhacker-web.service
+
+[Service]
+ExecStart=/home/hermes/.local/bin/cloudflared tunnel --url http://127.0.0.1:8791 --no-autoupdate
+Restart=always
+RestartSec=5
+NoNewPrivileges=yes
+UMask=0077
+MemoryMax=256M
+TasksMax=64
+
+[Install]
+WantedBy=default.target

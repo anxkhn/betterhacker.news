@@ -1,8 +1,4 @@
-beautifulsoup4
-fastapi
-pydantic
-jinja2
-uvicorn
-dotenv
-openai
-pydantic-settings
+fastapi>=0.120,<1
+uvicorn>=0.38,<1
+jinja2>=3.1.6,<4
+pillow>=12,<13

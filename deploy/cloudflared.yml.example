@@ -1,0 +1,6 @@
+tunnel: REPLACE_WITH_TUNNEL_ID
+credentials-file: /home/hermes/.cloudflared/betterhacker.json
+ingress:
+  - hostname: betterhacker.anaskhan.me
+    service: http://127.0.0.1:8791
+  - service: http_status:404

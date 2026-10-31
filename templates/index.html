@@ -1,119 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>betterhacker.news</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CC1QKKRL3C"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-CC1QKKRL3C');
-    </script>
-    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
-    <link rel="stylesheet" href="static/styles.css">
-    <!-- Add this line to include the Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&display=swap" rel="stylesheet">
-    <meta property="og:title" content="betterhacker.news">
-    <meta property="og:description" content="It is like hackernews, but better">
-    <meta property="og:image" content="https://betterhacker.news/static/og_image.svg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://betterhacker.news">
-    <style>
-        .github-icon {
-            width: 16px;
-            height: 16px;
-            margin-left: 5px;
-            vertical-align: middle;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>BetterHacker: Hacker News with thumbnails</title>
+  <meta name="description" content="Hacker News stories in a quick, dense list with a thumbnail for every link. Original titles, no rewrites.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f4efe6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1712" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="canonical" href="{{ public_url | default('') }}/">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js"></script>
+  <meta property="og:title" content="BetterHacker">
+  <meta property="og:description" content="Hacker News stories in a quick, dense list with a thumbnail for every link.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ public_url | default('') }}/">
+  <meta property="og:image" content="{{ public_url | default('') }}/static/og.png">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
-    <div class="header-container">
-        <header>
-            <div class="main-title">
-                <span class="better">better</span><span class="hacker">hacker</span><span class="news">.news</span>
-            </div>
-            <div class="main-subtitle">Hackernews Top Stories with some AI magic</div>
-        </header>
-        
-        <nav class="navbar">
-            <ul class="nav-tabs">
-                <li class="nav-item active" data-tab="top-stories">Top Stories</li>
-                <li class="nav-item" data-tab="top-githubs">Top Githubs</li>
-            </ul>
-        </nav>
+<a class="skip" href="#stories">Skip to stories</a>
+
+<header class="top">
+  <div class="wrap top-row">
+    <a class="brand" href="/" aria-label="BetterHacker home">
+      <img src="/static/favicon.svg" width="28" height="28" alt="">
+      <span class="brand-name">Better<b>Hacker</b></span>
+    </a>
+    <p class="tagline">Hacker News, with pictures.</p>
+    <button class="btn" type="button" id="theme" aria-label="Theme: system">Theme: system</button>
+  </div>
+  <div class="wrap">
+    <nav class="feeds" aria-label="Feeds">
+      {% for f in feeds %}
+      <a class="feed" href="/?feed={{ f }}"{% if f == feed %} aria-current="page"{% endif %}>{{ f | capitalize }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="main" data-generated="{{ generated_at }}">
+  <h1 class="sr">{{ feed | capitalize }} stories on BetterHacker</h1>
+  <div class="tools" role="search">
+    <label class="search">
+      <span class="sr">Search these stories</span>
+      <input id="q" type="search" placeholder="Search titles, domains, authors" autocomplete="off" spellcheck="false">
+    </label>
+    <div class="toggles">
+      <button class="btn" type="button" id="saved-only" aria-pressed="false">Saved <span id="saved-count">0</span></button>
+      <button class="btn" type="button" id="compact" aria-pressed="false">Compact</button>
     </div>
+  </div>
 
-    <div class="container">
-        <div id="top-stories" class="tab-content active">
-            {% for topic, data in articles.items() %}
-                <div class="column">
-                    <h2 class="topic">{{ topic }} // {{ topic_scores[topic] }} ❤️‍🔥</h2>
-                    <ul>
-                        {% for title, article in data.items() %}
-                            <li>
-                                <div class="title">
-                                    <a href="{{ article.url }}">
-                                        {{ title }}
-                                        {% if 'github.com' in article.url %}
-                                            <svg class="github-icon" viewBox="0 0 16 16" version="1.1" aria-hidden="true">
-                                                <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-                                            </svg>
-                                        {% endif %}
-                                    </a>
-                                    <span class="score"> {{ article.score }} <span class="emoji">❤️</span></span>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endfor %}
-        </div>
+  <p class="status" id="count" role="status" aria-live="polite">
+    {{ stories | length }} stories{% if fetched_at %}, fetched {{ fetched_at }}{% endif %}{% if stale %}. Showing an older copy while the next fetch runs.{% endif %}
+  </p>
 
-        <div id="top-githubs" class="tab-content">
-            {% include 'github_repos.html' %}
-        </div>
-    </div>
+  <div class="notice" id="notice" role="status" hidden>
+    <span>New stories are ready.</span>
+    <a class="btn" href="/?feed={{ feed }}">Refresh</a>
+  </div>
 
-    <div class="footer">
-        Created by <a href="https://olegkhomenko.me" class="footer-link">Oleg Khomenko</a><br>
-        Code is available on <a href="https://github.com/olegkhomenko/betterhacker.news" class="footer-link">GitHub</a>
-    </div>
-    <script>
-        const navItems = document.querySelectorAll('.nav-item');
-        const tabContents = document.querySelectorAll('.tab-content');
+  {% if stories %}
+  <ol class="list" id="stories">
+    {% for s in stories %}
+    <li class="story{% if loop.first %} lead{% endif %}" id="s{{ s.id }}" tabindex="-1"
+        data-id="{{ s.id }}" data-topic="{{ s.topic }}"
+        data-search="{{ (s.title ~ ' ' ~ s.domain ~ ' ' ~ s.by ~ ' ' ~ s.topic) | lower }}">
+      <span class="rank" aria-hidden="true">{{ s.rank }}</span>
+      <a class="thumb" href="{{ s.url }}" tabindex="-1" aria-hidden="true" rel="noopener noreferrer">
+        <img src="{{ s.thumbnail }}" width="160" height="100" alt="" loading="{% if loop.index > 6 %}lazy{% else %}eager{% endif %}" decoding="async" data-kind="{{ s.image_kind }}">
+      </a>
+      <div class="body">
+        <h2 class="title"><a class="link" href="{{ s.url }}" rel="noopener noreferrer">{{ s.title }}</a>{% if s.domain %} <span class="domain">{{ s.domain }}</span>{% endif %}</h2>
+        <p class="meta">
+          <span>{{ s.score }} {{ 'point' if s.score == 1 else 'points' }}</span>
+          <span>by {{ s.by }}</span>
+          <time data-time="{{ s.time }}">{{ s.time }}</time>
+          {% if s.topic %}<span class="topic">{{ s.topic }}</span>{% endif %}
+          <span class="story-actions"><a class="disc" href="https://news.ycombinator.com/item?id={{ s.id }}" rel="noopener noreferrer">{{ s.descendants }} {{ 'comment' if s.descendants == 1 else 'comments' }}</a>
+          <button class="save" type="button" aria-pressed="false" aria-label="Save: {{ s.title }}">Save</button>
+          </span>
+        </p>
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="empty" id="stories">No stories in this feed yet. Try another feed or check back in a few minutes.</p>
+  {% endif %}
 
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const tabId = item.getAttribute('data-tab');
-                
-                // Remove 'active' class from all nav items and tab contents
-                navItems.forEach(navItem => navItem.classList.remove('active'));
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                    content.style.display = 'none'; // Hide all tab contents
-                });
-                
-                // Add 'active' class to clicked nav item and corresponding tab content
-                item.classList.add('active');
-                const activeContent = document.getElementById(tabId);
-                activeContent.classList.add('active');
-                activeContent.style.display = 'block'; // Show the active tab content
-            });
-        });
+  <p class="empty" id="none" hidden>Nothing matches. Clear the search or switch feeds.</p>
 
-        // Initialize: hide all except the first tab content
-        tabContents.forEach((content, index) => {
-            if (index === 0) {
-                content.style.display = 'block';
-            } else {
-                content.style.display = 'none';
-            }
-        });
-    </script>
+  <p class="keys">Keys: j and k move, o opens, c opens comments, s saves, / searches.</p>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>BetterHacker is a fork of the original by <a href="https://olegkhomenko.me">Oleg Khomenko</a>. This fork is <a href="https://github.com/anxkhn/betterhacker.news">anxkhn/betterhacker.news</a>, kept by <a href="https://anaskhan.me">Anas</a>.</p>
+    <p>Stories and titles come from <a href="https://news.ycombinator.com">Hacker News</a>.</p>
+  </div>
+</footer>
 </body>
 </html>

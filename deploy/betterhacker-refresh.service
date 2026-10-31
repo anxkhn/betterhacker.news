@@ -1,0 +1,14 @@
+[Unit]
+Description=Refresh BetterHacker feeds and thumbnails
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/hermes/betterhacker.news
+ExecStart=/home/hermes/betterhacker.news/.venv/bin/python worker.py
+Environment=BETTERHACKER_DATA=/home/hermes/betterhacker.news/data
+NoNewPrivileges=yes
+UMask=0077
+TimeoutStartSec=270
+MemoryMax=768M
+TasksMax=64

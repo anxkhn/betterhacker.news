@@ -1,0 +1,19 @@
+[Unit]
+Description=BetterHacker read-only web app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/home/hermes/betterhacker.news
+ExecStart=/home/hermes/betterhacker.news/.venv/bin/uvicorn app.app:app --host 127.0.0.1 --port 8791 --no-proxy-headers --limit-concurrency 64 --timeout-keep-alive 5 --no-server-header
+Environment=BETTERHACKER_DATA=/home/hermes/betterhacker.news/data
+Environment=BETTERHACKER_PUBLIC_URL=https://minister-hawk-involve-supplier.trycloudflare.com
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+UMask=0077
+MemoryMax=384M
+TasksMax=64
+
+[Install]
+WantedBy=default.target

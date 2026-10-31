@@ -1,4 +1,7 @@
 data/*.json
+data/media/
+data/*.lock
+.gstack/
 **/.DS_Store
 
 # Byte-compiled / optimized / DLL files
